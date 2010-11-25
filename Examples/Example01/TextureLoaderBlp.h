@@ -18,7 +18,28 @@ CONST INT MAX_NR_OF_BLP_MIP_MAPS = 16;
 //+-----------------------------------------------------------------------------
 struct BLP_HEADER
 {
+	BLP_HEADER()
+	{
+		MagicNumber= '1PLB';
+		Compression = 0;
+		Flags = 0;
+		Width = 0;
+		Height = 0;
+		PictureType = 0;
+		PictureSubType = 0;
+		ZeroMemory(Offset, MAX_NR_OF_BLP_MIP_MAPS * sizeof(DWORD));
+		ZeroMemory(Size, MAX_NR_OF_BLP_MIP_MAPS * sizeof(DWORD));
+	}
 
+	DWORD MagicNumber;
+	DWORD Compression;
+	DWORD Flags;
+	DWORD Width;
+	DWORD Height;
+	DWORD PictureType;
+	DWORD PictureSubType;
+	DWORD Offset[MAX_NR_OF_BLP_MIP_MAPS];
+	DWORD Size[MAX_NR_OF_BLP_MIP_MAPS];
 };
 
 
@@ -27,7 +48,10 @@ struct BLP_HEADER
 //+-----------------------------------------------------------------------------
 struct BLP_RGBA
 {
-
+	UCHAR Red;
+	UCHAR Green;
+	UCHAR Blue;
+	UCHAR Alpha;
 };
 
 
@@ -36,7 +60,7 @@ struct BLP_RGBA
 //+-----------------------------------------------------------------------------
 struct BLP_PIXEL
 {
-
+	UCHAR Index;
 };
 
 

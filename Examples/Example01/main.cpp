@@ -1,30 +1,68 @@
-#include "Misc.h"
+#include "TextureManager.h"
+CONST std::string FileName = "Abomination.blp";
 
-GLuint g_simpleProgram;
+
+GLuint programObject;
+TEXTURE *Texture;
+
+struct Vertex
+{
+	float p[3];
+	float t[2];
+};
+
+Vertex vertices[] = {
+	{ {-0.5f, 0.5f, 0.0f},	{0.0f, 1.0f}},
+	{ {-0.5f, -0.5f, 0.0f},	{0.0f, 0.0f}},
+	{ {0.5f, -0.5f, 0.0f},	{1.0f, 0.0f}},
+	{ {0.5f, 0.5f, 0.0f},	{1.0f, 1.0f}}
+};
+
+GLshort indices[] = { 0, 1, 2, 0, 2, 3};
 
 int Init ( ESContext *esContext )
 {
-	glViewport(0, 0, esContext->width, esContext->height);
+	ResourceLoader.RegisterAllLoaders();
 
-	g_simpleProgram = esLoadProgramFromFile("Simple.vert", "Simple.frag");
-	
-	glUseProgram(g_simpleProgram);
+	if(!TextureManager.Load(FileName)) return 0;
+	Texture = TextureManager.GetTexture(FileName);
 
-	return true;
+	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
+	glUseProgram(programObject);
+
+	glClearColor ( 0.5f, 0.5f, 0.5f, 1.0f );
+
+	return TRUE;
 }
 
 void Draw ( ESContext *esContext )
 {
-	glClearColor ( 0.5f, 0.5f, 0.5f, 1.0f );
-	glClear ( GL_COLOR_BUFFER_BIT );
-	
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glFrontFace(GL_CCW);
+	glEnable(GL_BACK);
+	glCullFace(GL_BACK);
+	glEnable(GL_TEXTURE_2D);
+
+	GLuint positionSlot = glGetAttribLocation(programObject, "Position");
+	glEnableVertexAttribArray(positionSlot);
+	glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices->p[0]);
+
+	GLuint texcoordSlot = glGetAttribLocation(programObject, "TexCoord");
+	glEnableVertexAttribArray(texcoordSlot);
+	glVertexAttribPointer(texcoordSlot, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices->t[0]);
+
+	GLuint sampler = glGetUniformLocation(programObject, "Sampler");
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(sampler, 0);
+
+	glBindTexture(GL_TEXTURE_2D, Texture->GetTextureId());
+
+	glDrawElements(GL_TRIANGLES, 54 * 2, GL_UNSIGNED_SHORT, indices);
+
+	glDisable(GL_TEXTURE_2D);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
-}
-
-void Update(ESContext *esContext, float deltaTime)
-{
-
 }
 
 int main ( int argc, char *argv[] )
@@ -33,12 +71,12 @@ int main ( int argc, char *argv[] )
 
 	esInitContext ( &esContext );
 
-	esCreateWindow ( &esContext, "Hello Triangle", 320, 240, ES_WINDOW_RGB );
+	esCreateWindow ( &esContext, "Hello Triangle", 800, 600, ES_WINDOW_RGB );
 
 	if ( !Init ( &esContext ) )
 		return 0;
 
-	esRegisterDrawFunc(&esContext, Draw);
-	esRegisterUpdateFunc(&esContext, Update);
+	esRegisterDrawFunc ( &esContext, Draw );
+
 	esMainLoop ( &esContext );
 }

@@ -22,7 +22,7 @@ public:
 	CONSTRUCTOR RESOURCE_LOADER();
 	DESTRUCTOR ~RESOURCE_LOADER();
 
-	VOID RegisterAllLoader();
+	VOID RegisterAllLoaders();
 	VOID ClearAllLoaders();
 
 	BOOL IsTextureExtention(CONST std::string& Extention) CONST;

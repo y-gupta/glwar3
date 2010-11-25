@@ -31,7 +31,7 @@ RESOURCE_LOADER::~RESOURCE_LOADER()
 //+-----------------------------------------------------------------------------
 //| Register all loaders
 //+-----------------------------------------------------------------------------
-VOID RESOURCE_LOADER::RegisterAllLoader()
+VOID RESOURCE_LOADER::RegisterAllLoaders()
 {
 	ClearAllLoaders();
 
