@@ -12,10 +12,10 @@ struct Vertex
 };
 
 Vertex vertices[] = {
-	{ {-0.5f, 0.5f, 0.0f},	{0.0f, 1.0f}},
-	{ {-0.5f, -0.5f, 0.0f},	{0.0f, 0.0f}},
-	{ {0.5f, -0.5f, 0.0f},	{1.0f, 0.0f}},
-	{ {0.5f, 0.5f, 0.0f},	{1.0f, 1.0f}}
+	{ {-0.5f, 0.5f, 0.0f},	{1.0f, 0.0f}},
+	{ {-0.5f, -0.5f, 0.0f},	{1.0f, 1.0f}},
+	{ {0.5f, -0.5f, 0.0f},	{0.0f, 1.0f}},
+	{ {0.5f, 0.5f, 0.0f},	{0.0f, 0.0f}}
 };
 
 GLshort indices[] = { 0, 1, 2, 0, 2, 3};
@@ -58,7 +58,7 @@ void Draw ( ESContext *esContext )
 
 	glBindTexture(GL_TEXTURE_2D, Texture->GetTextureId());
 
-	glDrawElements(GL_TRIANGLES, 54 * 2, GL_UNSIGNED_SHORT, indices);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
 	glDisable(GL_TEXTURE_2D);
 
