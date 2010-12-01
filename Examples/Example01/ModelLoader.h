@@ -4,27 +4,27 @@
 //+-----------------------------------------------------------------------------
 //| Included files
 //+-----------------------------------------------------------------------------
-#include "TextureManager.h"
+#include "Model.h"
+
 
 //+-----------------------------------------------------------------------------
-//| Graphics class
+//| Model loader class
 //+-----------------------------------------------------------------------------
-class GRAPHICS
+class MODEL_LOADER
 {
 public:
-	CONSTRUCTOR GRAPHICS();
-	DESTRUCTOR ~GRAPHICS();
+	CONSTRUCTOR MODEL_LOADER();
+	DESTRUCTOR ~MODEL_LOADER();
 
+	virtual BOOL Save(MODEL& Model, CONST std::string& FileName, BUFFER& Buffer) = 0;
+	virtual BOOL Load(MODEL& Model, CONST std::string& FileName, BUFFER& Buffer) = 0;
 
 protected:
-	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
-
-	friend class GRAPHICS_WINDOW;
-	friend class TEXTURE;
+	static std::string CurrentFileName;
 };
 
 
 //+-----------------------------------------------------------------------------
-//| Global objects
+//| Post-included files
 //+-----------------------------------------------------------------------------
-extern GRAPHICS Graphics;
+#include "ModelLoaderMdx.h"

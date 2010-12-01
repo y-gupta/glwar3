@@ -220,6 +220,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\DataInStream.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Error.cpp"
 					>
 				</File>
@@ -236,6 +240,14 @@
 				Name="ResourceLoader"
 				>
 				<File
+					RelativePath=".\ModelLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelLoaderMdx.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ResourceLoader.cpp"
 					>
 				</File>
@@ -245,6 +257,30 @@
 				</File>
 				<File
 					RelativePath=".\TextureLoaderBlp.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Model"
+				>
+				<File
+					RelativePath=".\Model.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGlobalSequence.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelMaterialLayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelSequence.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelTexture.cpp"
 					>
 				</File>
 			</Filter>
@@ -288,11 +324,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\DataInStream.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Error.h"
 					>
 				</File>
 				<File
+					RelativePath=".\Extent.h"
+					>
+				</File>
+				<File
 					RelativePath=".\FileLoader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Interpolator.h"
 					>
 				</File>
 				<File
@@ -309,6 +357,18 @@
 				</File>
 				<File
 					RelativePath=".\ReferenceObject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SequenceTimer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SimpleContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Vector.h"
 					>
 				</File>
 			</Filter>
@@ -332,6 +392,14 @@
 				Name="ResourceLoader"
 				>
 				<File
+					RelativePath=".\ModelLoader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelLoaderMdx.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ResourceLoader.h"
 					>
 				</File>
@@ -343,6 +411,42 @@
 					RelativePath=".\TextureLoaderBlp.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Model"
+				>
+				<File
+					RelativePath=".\Model.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGlobalSequence.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelMaterialLayer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelSequence.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelTexture.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Math"
+				>
 			</Filter>
 		</Filter>
 		<File

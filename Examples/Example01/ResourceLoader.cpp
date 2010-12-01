@@ -35,6 +35,7 @@ VOID RESOURCE_LOADER::RegisterAllLoaders()
 {
 	ClearAllLoaders();
 
+	RegisterModelLoader("mdx", &ModelLoaderMdx);
 	RegisterTextureLoader("blp", &TextureLoaderBlp);
 }
 
@@ -61,6 +62,27 @@ BOOL RESOURCE_LOADER::IsTextureExtention(CONST std::string &Extention) CONST
 	return TRUE;
 }
 
+
+//+-----------------------------------------------------------------------------
+//| Loads a model
+//+-----------------------------------------------------------------------------
+BOOL RESOURCE_LOADER::LoadModel(MODEL& Model, CONST std::string& FileName, BUFFER& Buffer) CONST
+{
+	std::string Extention;
+	std::map<std::string, MODEL_LOADER*>::const_iterator i;
+
+	Model.Clear();
+
+	Extention = Common.LowerCase(Common.GetExtention(FileName));
+	i = ModelLoaderMap.find(Extention);
+	if (i == ModelLoaderMap.end())
+	{
+		Error.SetMessage("Unable to load \"" + FileName + "\", unknown extention \"" + Extention + "\"!");
+		return FALSE;
+	}
+
+	return i->second->Load(Model, FileName, Buffer);
+}
 
 //+-----------------------------------------------------------------------------
 //| Saves a texture
@@ -90,6 +112,15 @@ BOOL RESOURCE_LOADER::LoadTexture(TEXTURE& Texture, CONST std::string& FileName,
 	}
 
 	return i->second->Load(Texture, FileName, Buffer);
+}
+
+
+//+-----------------------------------------------------------------------------
+//| Registers a model loader
+//+-----------------------------------------------------------------------------
+VOID RESOURCE_LOADER::RegisterModelLoader(CONST std::string& Extention, MODEL_LOADER* ModelLoader)
+{
+	ModelLoaderMap.insert(std::make_pair(Common.LowerCase(Extention), ModelLoader));
 }
 
 

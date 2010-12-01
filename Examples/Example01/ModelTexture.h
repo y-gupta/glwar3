@@ -4,27 +4,47 @@
 //+-----------------------------------------------------------------------------
 //| Included files
 //+-----------------------------------------------------------------------------
-#include "TextureManager.h"
+#include "ModelBase.h"
+
 
 //+-----------------------------------------------------------------------------
-//| Graphics class
+//| Model texture data structure
 //+-----------------------------------------------------------------------------
-class GRAPHICS
+struct MODEL_TEXTURE_DATA
 {
-public:
-	CONSTRUCTOR GRAPHICS();
-	DESTRUCTOR ~GRAPHICS();
+	MODEL_TEXTURE_DATA()
+	{
 
+	}
 
-protected:
-	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
+	INT ReplaceableId;
 
-	friend class GRAPHICS_WINDOW;
-	friend class TEXTURE;
+	BOOL WarpWidth;
+	BOOL WarpHeight;
+
+	std::string FileName;
+
+	INT InternalTextureId;
 };
 
 
 //+-----------------------------------------------------------------------------
-//| Global objects
+//| Model texture class
 //+-----------------------------------------------------------------------------
-extern GRAPHICS Graphics;
+class MODEL_TEXTURE
+{
+public:
+	CONSTRUCTOR MODEL_TEXTURE();
+	DESTRUCTOR ~MODEL_TEXTURE();
+
+	VOID Clear();
+	INT GetSize();
+
+	MODEL_TEXTURE_DATA& Data();
+
+protected:
+	MODEL_TEXTURE_DATA TextureData;
+
+public:
+
+};

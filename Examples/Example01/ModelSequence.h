@@ -4,27 +4,47 @@
 //+-----------------------------------------------------------------------------
 //| Included files
 //+-----------------------------------------------------------------------------
-#include "TextureManager.h"
+#include "ModelBase.h"
+
 
 //+-----------------------------------------------------------------------------
-//| Graphics class
+//| Model sequence data structure
 //+-----------------------------------------------------------------------------
-class GRAPHICS
+struct MODEL_SEQUENCE_DATA
 {
-public:
-	CONSTRUCTOR GRAPHICS();
-	DESTRUCTOR ~GRAPHICS();
+	MODEL_SEQUENCE_DATA()
+	{
 
+	}
 
-protected:
-	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
+	std::string Name;
 
-	friend class GRAPHICS_WINDOW;
-	friend class TEXTURE;
+	FLOAT Rarity;
+	FLOAT MoveSpeed;
+	BOOL NonLooping;
+
+	VECTOR2 Interval;
+	EXTENT Extent;
 };
 
 
 //+-----------------------------------------------------------------------------
-//| Global objects
+//| Model sequence class
 //+-----------------------------------------------------------------------------
-extern GRAPHICS Graphics;
+class MODEL_SEQUENCE
+{
+public:
+	CONSTRUCTOR MODEL_SEQUENCE();
+	DESTRUCTOR ~MODEL_SEQUENCE();
+
+	VOID Clear();
+	INT GetSize();
+
+	MODEL_SEQUENCE_DATA& Data();
+
+protected:
+	MODEL_SEQUENCE_DATA SequenceData;
+
+public:
+	REFERENCE_OBJECT<MODEL*, MODEL_SEQUENCE*> ModelNodes;
+};
