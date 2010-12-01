@@ -1,30 +1,28 @@
-#pragma once
-
-
 //+-----------------------------------------------------------------------------
 //| Included files
 //+-----------------------------------------------------------------------------
-#include "TextureManager.h"
+#include "ModelLoader.h"
+
 
 //+-----------------------------------------------------------------------------
-//| Graphics class
+//| Static member variables
 //+-----------------------------------------------------------------------------
-class GRAPHICS
+std::string MODEL_LOADER::CurrentFileName;
+
+
+//+-----------------------------------------------------------------------------
+//| Constructor
+//+-----------------------------------------------------------------------------
+MODEL_LOADER::MODEL_LOADER()
 {
-public:
-	CONSTRUCTOR GRAPHICS();
-	DESTRUCTOR ~GRAPHICS();
-
-
-protected:
-	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
-
-	friend class GRAPHICS_WINDOW;
-	friend class TEXTURE;
-};
+	//Empty
+}
 
 
 //+-----------------------------------------------------------------------------
-//| Global objects
+//| Destructor
 //+-----------------------------------------------------------------------------
-extern GRAPHICS Graphics;
+MODEL_LOADER::~MODEL_LOADER()
+{
+	//Empty
+}

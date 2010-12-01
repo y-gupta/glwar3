@@ -1,6 +1,4 @@
 #include "TextureManager.h"
-CONST std::string FileName = "Abomination.blp";
-
 
 GLuint programObject;
 TEXTURE *Texture;
@@ -24,8 +22,16 @@ int Init ( ESContext *esContext )
 {
 	ResourceLoader.RegisterAllLoaders();
 
-	if(!TextureManager.Load(FileName)) return 0;
-	Texture = TextureManager.GetTexture(FileName);
+	if(!TextureManager.Load("Abomination.blp")) return 0;
+	Texture = TextureManager.GetTexture("Abomination.blp");
+
+	BUFFER Buffer;
+	if(!FileLoader.LoadFromFile("Abomination.mdx", Buffer))
+	{
+		Error.SetMessage("Unable to load \"Abomination.mdx\", file does not exist!");
+		return 0;
+	}
+	if(!ResourceLoader.LoadModel(Model, "Abomination.mdx", Buffer)) return 0;
 
 	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
 	glUseProgram(programObject);
