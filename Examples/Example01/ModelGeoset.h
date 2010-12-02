@@ -32,6 +32,7 @@ struct MODEL_GEOSET_DATA
 
 	SIMPLE_CONTAINER<MODEL_GEOSET_VERTEX*> VertexContainer;
 	SIMPLE_CONTAINER<MODEL_GEOSET_FACE*> FaceContainer;
+	SIMPLE_CONTAINER<MODEL_GEOSET_GROUP*> GroupContainer;
 	SIMPLE_CONTAINER<EXTENT*> ExtentContainer;
 
 	EXTENT Extent;
@@ -54,7 +55,10 @@ public:
 
 	MODEL_GEOSET_DATA& Data();
 
+	BOOL AddVertex(MODEL_GEOSET_VERTEX* Vertex);
 	BOOL AddFace(MODEL_GEOSET_FACE* Face);
+	BOOL AddGroup(MODEL_GEOSET_GROUP* Group);
+	BOOL AddExtent(EXTENT* Extent);
 
 protected:
 	MODEL_GEOSET_DATA GeosetData;

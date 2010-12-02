@@ -322,6 +322,8 @@ BOOL MODEL_LOADER_MDX::LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT
 //+-----------------------------------------------------------------------------
 BOOL MODEL_LOADER_MDX::LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStream, INT Size)
 {
+	INT j;
+	INT IndexSize;
 	INT FaceType;
 	DWORD NrOfVertices;
 	DWORD NrOfNormals;
@@ -329,19 +331,25 @@ BOOL MODEL_LOADER_MDX::LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStre
 	DWORD NrOfTexturePositions;
 	DWORD NrOfIndexes;
 	DWORD NrOfFaces;
-	DWORD NrOfFaceTypeGroups;
+	DWORD NrOfMTGC;
+	DWORD NrOfMatrices;
+	DWORD NrOfAnimations;
 	DWORD NrOfFaceGroups;
-
+	DWORD NrOfFaceTypeGroups;
+	DWORD NrOfTextureVertexGroups;
 	VECTOR3 TempVector3;
 	VECTOR2 TempVector2;
 	std::stringstream Stream;
-
 	std::vector<VECTOR3> PositionList;
 	std::vector<VECTOR3> NormalList;
 	std::vector<VECTOR2> TexturePositionList;
 	std::vector<INT> GroupList;
-
+	std::vector<DWORD> GroupIndexList;
+	MODEL_GEOSET_VERTEX* Vertex;
 	MODEL_GEOSET_FACE* Face;
+	MODEL_GEOSET_GROUP* Group;
+	MODEL_GEOSET_GROUP_NODE* GroupNode;
+	EXTENT* Extent;
 
 	if(!ExpectTag(DataStream, 'VRTX')) return FALSE;
 
@@ -445,6 +453,118 @@ BOOL MODEL_LOADER_MDX::LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStre
 
 	if(!ExpectTag(DataStream, 'MTGC')) return FALSE;
 
+	NrOfMTGC = DataStream.ReadDWord();
+	for(INT i = 0; i < static_cast<INT>(NrOfMTGC); i++)
+	{
+		Group = new MODEL_GEOSET_GROUP();
+		if(Group == NULL)
+		{
+			Error.SetMessage("Unable to create a new matrix group!");
+			return FALSE;
+		}
+
+		Group->MatrixListSize = static_cast<INT>(DataStream.ReadDWord());
+
+		if(!Geoset.AddGroup(Group)) return FALSE;
+	}
+
+	if(!ExpectTag(DataStream, 'MATS')) return FALSE;
+
+	j = -1;
+	IndexSize = 0;
+	NrOfMatrices = DataStream.ReadDWord();
+	for(INT i = 0; i < static_cast<INT>(NrOfMatrices); i++)
+	{
+		if(IndexSize <= 0)
+		{
+			j++;
+			IndexSize = Geoset.Data().GroupContainer[j]->MatrixListSize;
+		}
+
+		GroupNode = new MODEL_GEOSET_GROUP_NODE();
+		if(GroupNode == NULL)
+		{
+			Error.SetMessage("Unable to create a new matrix group node!");
+			return FALSE;
+		}
+
+		GroupNode->NodeId = DataStream.ReadDWord();
+		if(!Geoset.Data().GroupContainer[j]->MatrixList.Add(GroupNode)) return FALSE;
+
+		IndexSize--;
+	}
+
+	Geoset.Data().MaterialId = static_cast<INT>(DataStream.ReadDWord());
+	Geoset.Data().SelectionGroup = DataStream.ReadDWord();
+	Geoset.Data().Unselectable = (DataStream.ReadDWord() == 4);
+
+	Geoset.Data().Extent.Radius = DataStream.ReadFloat();
+	Geoset.Data().Extent.Min.x = DataStream.ReadFloat();
+	Geoset.Data().Extent.Min.y = DataStream.ReadFloat();
+	Geoset.Data().Extent.Min.z = DataStream.ReadFloat();
+	Geoset.Data().Extent.Max.x = DataStream.ReadFloat();
+	Geoset.Data().Extent.Max.y = DataStream.ReadFloat();
+	Geoset.Data().Extent.Max.z = DataStream.ReadFloat();
+
+	NrOfAnimations = DataStream.ReadDWord();
+	for(INT i = 0; i < static_cast<INT>(NrOfAnimations); i++)
+	{
+		Extent = new EXTENT();
+		if(Extent == NULL)
+		{
+			Error.SetMessage("Unable to create a new extent!");
+			return FALSE;
+		}
+
+		Extent->Radius = DataStream.ReadFloat();
+		Extent->Min.x = DataStream.ReadFloat();
+		Extent->Min.y = DataStream.ReadFloat();
+		Extent->Min.z = DataStream.ReadFloat();
+		Extent->Max.x = DataStream.ReadFloat();
+		Extent->Max.y = DataStream.ReadFloat();
+		Extent->Max.z = DataStream.ReadFloat();
+
+		if(!Geoset.AddExtent(Extent)) return FALSE;
+	}
+
+	if(!ExpectTag(DataStream, 'UVAS')) return FALSE;
+
+	NrOfTextureVertexGroups = DataStream.ReadDWord();
+
+	if(!ExpectTag(DataStream, 'UVBS')) return FALSE;
+
+	NrOfTexturePositions = DataStream.ReadDWord();
+	if(NrOfTexturePositions != NrOfVertices)
+	{
+		Stream << "Texture position count mismatch in \"" << CurrentFileName << "\", " << NrOfTexturePositions << " texture positions for " << NrOfVertices << " vertices)!";
+		Error.SetMessage(Stream.str());
+		return FALSE;
+	}
+
+	for(INT i = 0; i < static_cast<INT>(NrOfTexturePositions); i++)
+	{
+		TempVector2.x = DataStream.ReadFloat();
+		TempVector2.y = DataStream.ReadFloat();
+
+		TexturePositionList.push_back(TempVector2);
+	}
+
+	for(INT i = 0; i < static_cast<INT>(NrOfVertices); i++)
+	{
+		Vertex = new MODEL_GEOSET_VERTEX();
+		if(Vertex == NULL)
+		{
+			Error.SetMessage("Unable to create a new vertex!");
+			return FALSE;
+		}
+
+		Vertex->Position = PositionList[i];
+		Vertex->Normal = NormalList[i];
+		Vertex->TexturePosition = TexturePositionList[i];
+		Vertex->VertexGroup = GroupList[i];
+
+		if(!Geoset.AddVertex(Vertex)) return FALSE;
+	}
 
 	return TRUE;
 }

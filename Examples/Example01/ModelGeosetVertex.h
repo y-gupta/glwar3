@@ -17,6 +17,7 @@ class MODEL_GEOSET_GROUP;
 //+-----------------------------------------------------------------------------
 class MODEL_GEOSET_VERTEX
 {
+public:
 	CONSTRUCTOR MODEL_GEOSET_VERTEX();
 	DESTRUCTOR ~MODEL_GEOSET_VERTEX();
 
