@@ -42,6 +42,8 @@ protected:
 	static BOOL LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStream, INT Size);
 
+	static BOOL ExpectTag(DATA_IN_STREAM& DataStream, DWORD Tag);
+
 	std::map<DWORD, MDX_LOADER> MdxLoaderMap;
 };
 

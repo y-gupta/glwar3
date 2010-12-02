@@ -283,7 +283,37 @@ BOOL MODEL_LOADER_MDX::LoadTextureAnimations(MODEL& Model ,DATA_IN_STREAM& DataS
 //+-----------------------------------------------------------------------------
 BOOL MODEL_LOADER_MDX::LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size)
 {
-	return TRUE;
+	INT CurrentSize;
+	INT GeosetSize;
+	MODEL_GEOSET* Geoset;
+
+	CurrentSize = 0;
+	while(CurrentSize < Size)
+	{
+		GeosetSize = DataStream.ReadDWord();
+		CurrentSize += GeosetSize;
+
+		Geoset = new MODEL_GEOSET();
+		if(Geoset == NULL)
+		{
+			Error.SetMessage("Unable to load \"" + CurrentFileName + "\", memory allocation failed!");
+			return FALSE;
+		}
+
+		if(!LoadGeoset((*Geoset), DataStream, GeosetSize))
+		{
+			delete Geoset;
+			return FALSE;
+		}
+
+		/*
+		if(!Model.AddGeoset(Geoset))
+		{
+			delete Geoset;
+			return FALSE;
+		}
+		*/
+	}
 }
 
 
@@ -292,6 +322,130 @@ BOOL MODEL_LOADER_MDX::LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT
 //+-----------------------------------------------------------------------------
 BOOL MODEL_LOADER_MDX::LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStream, INT Size)
 {
+	INT FaceType;
+	DWORD NrOfVertices;
+	DWORD NrOfNormals;
+	DWORD NrOfVertexGroups;
+	DWORD NrOfTexturePositions;
+	DWORD NrOfIndexes;
+	DWORD NrOfFaces;
+	DWORD NrOfFaceTypeGroups;
+	DWORD NrOfFaceGroups;
+
+	VECTOR3 TempVector3;
+	VECTOR2 TempVector2;
+	std::stringstream Stream;
+
+	std::vector<VECTOR3> PositionList;
+	std::vector<VECTOR3> NormalList;
+	std::vector<VECTOR2> TexturePositionList;
+	std::vector<INT> GroupList;
+
+	MODEL_GEOSET_FACE* Face;
+
+	if(!ExpectTag(DataStream, 'VRTX')) return FALSE;
+
+	NrOfVertices = DataStream.ReadDWord();
+
+	PositionList.reserve(NrOfVertices);
+	NormalList.reserve(NrOfVertices);
+	GroupList.reserve(NrOfVertices);
+	TexturePositionList.reserve(NrOfVertices);
+	
+	for (INT i = 0; i < static_cast<INT>(NrOfVertices); i++)
+	{
+		TempVector3.x = DataStream.ReadFloat();
+		TempVector3.y = DataStream.ReadFloat();
+		TempVector3.z = DataStream.ReadFloat();
+
+		PositionList.push_back(TempVector3);
+	}
+
+	if(!ExpectTag(DataStream, 'NRMS')) return FALSE;
+
+	NrOfNormals = DataStream.ReadDWord();
+	if(NrOfNormals != NrOfVertices)
+	{
+		Stream << "Normal count mismatch in \"" << CurrentFileName << "\", " << NrOfNormals << " normals for " << NrOfVertices << " vertices)!";
+		Error.SetMessage(Stream.str());
+		return FALSE;
+	}
+
+	for(INT i = 0; i < static_cast<INT>(NrOfNormals); i++)
+	{
+		TempVector3.x = DataStream.ReadFloat();
+		TempVector3.y = DataStream.ReadFloat();
+		TempVector3.z = DataStream.ReadFloat();
+
+		NormalList.push_back(TempVector3);
+	}
+
+	if(!ExpectTag(DataStream, 'PTYP')) return FALSE;
+	NrOfFaceTypeGroups = DataStream.ReadDWord();
+
+	for (INT i = 0; i < static_cast<INT>(NrOfFaceTypeGroups); i++)
+	{
+		FaceType = DataStream.ReadDWord();
+		if(FaceType != 4)
+		{
+			Stream << "Can only load triangle lists! Expected type 4, got type " << FaceType << "!";
+			Error.SetMessage(Stream.str());
+			return FALSE;
+		}
+	}
+
+	if(!ExpectTag(DataStream, 'PCNT')) return FALSE;
+	NrOfFaceGroups = DataStream.ReadDWord();
+
+	for(INT i = 0; i < static_cast<INT>(NrOfFaceGroups); i++)
+	{
+		NrOfIndexes = DataStream.ReadDWord();
+	}
+
+	if(!ExpectTag(DataStream, 'PVTX')) return FALSE;
+
+	NrOfIndexes = DataStream.ReadDWord();
+	NrOfFaces = NrOfIndexes / 3;
+	if (NrOfIndexes != (NrOfFaces * 3))
+	{
+		Error.SetMessage("The number of indexes in \"" + CurrentFileName + "\" is not a multiple of 3!");
+		return FALSE;
+	}
+
+	for(INT i = 0; i < static_cast<INT>(NrOfFaces); i++)
+	{
+		Face = new MODEL_GEOSET_FACE();
+		if(Face == NULL)
+		{
+			Error.SetMessage("Unable to create a new face!");
+			return FALSE;
+		}
+
+		Face->Index1 = DataStream.ReadWord();
+		Face->Index2 = DataStream.ReadWord();
+		Face->Index3 = DataStream.ReadWord();
+
+		if(!Geoset.AddFace(Face)) return FALSE;
+	}
+
+	if(!ExpectTag(DataStream, 'GNDX')) return FALSE;
+
+	NrOfVertexGroups = DataStream.ReadDWord();
+	if(NrOfVertexGroups != NrOfVertices)
+	{
+		Stream << "Vertex group count mismatch in \"" << CurrentFileName << "\", " << NrOfVertexGroups << " vertex groups for " << NrOfVertices << " vertices)!";
+		Error.SetMessage(Stream.str());
+		return FALSE;
+	}
+
+	for(INT i = 0; i < static_cast<INT>(NrOfVertexGroups); i++)
+	{
+		GroupList.push_back(DataStream.ReadChar());
+	}
+
+	if(!ExpectTag(DataStream, 'MTGC')) return FALSE;
+
+
 	return TRUE;
 }
 
@@ -355,4 +509,19 @@ std::string MODEL_LOADER_MDX::GroupToString(DWORD Group)
 	Buffer[4] = '\0';
 
 	return Buffer;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| Expects a certain tag
+//+-----------------------------------------------------------------------------
+BOOL MODEL_LOADER_MDX::ExpectTag(DATA_IN_STREAM& DataStream, DWORD Tag)
+{
+	DWORD ReceivedTag;
+
+	ReceivedTag = ReverseDWord(DataStream.ReadDWord());
+	if(ReceivedTag == Tag) return TRUE;
+
+	Error.SetMessage("Expected a \"" + GroupToString(Tag) + "\" tag, got a \"" + GroupToString(ReceivedTag) + "\" tag!");
+	return FALSE;
 }

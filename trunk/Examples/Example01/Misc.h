@@ -4,6 +4,7 @@
 //| Included files
 //+-----------------------------------------------------------------------------
 #include "Vector.h"
+#include "Matrix.h"
 #include "Buffer.h"
 #include "Container.h"
 #include "Reference.h"
