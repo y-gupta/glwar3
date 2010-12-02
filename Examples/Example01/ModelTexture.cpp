@@ -9,8 +9,7 @@
 //+-----------------------------------------------------------------------------
 MODEL_TEXTURE::MODEL_TEXTURE()
 {
-	//MaterialLayerNodes.SetData(this);
-	//ParticleEmitter2Nodes.SetData(this);
+
 }
 
 

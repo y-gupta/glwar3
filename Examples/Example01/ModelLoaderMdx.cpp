@@ -19,7 +19,10 @@ MODEL_LOADER_MDX::MODEL_LOADER_MDX()
 	RegisterMdxLoader('MODL', LoadModel);
 	RegisterMdxLoader('SEQS', LoadSequences);
 	RegisterMdxLoader('GLBS', LoadGlobalSequences);
+	RegisterMdxLoader('MTLS', LoadMaterials);
 	RegisterMdxLoader('TEXS', LoadTextures);
+	RegisterMdxLoader('TXAN', LoadTextureAnimations);
+	RegisterMdxLoader('GEOS', LoadGeosets);
 }
 
 
@@ -67,6 +70,7 @@ BOOL MODEL_LOADER_MDX::Load(MODEL& Model, CONST std::string& FileName, BUFFER& B
 		Group = ReverseDWord(DataStream.ReadDWord());
 		Size = static_cast<INT>(DataStream.ReadDWord());
 
+		std::string StrGroup =  GroupToString(Group);
 		i = MdxLoaderMap.find(Group);
 		if (i == MdxLoaderMap.end())
 		{
@@ -127,69 +131,18 @@ BOOL MODEL_LOADER_MDX::LoadSequences(MODEL& Model, DATA_IN_STREAM& DataStream, I
 {
 	INT CurrentSize;
 	INT SequenceSize;
-	MODEL_SEQUENCE* Sequence;
 
 	CurrentSize = 0;
 	while (CurrentSize < Size)
 	{
-		Sequence = new MODEL_SEQUENCE();
-		if (Sequence == NULL)
-		{
-			Error.SetMessage("Unable to load \"" + CurrentFileName + "\", memory allocation failed!");
-			return FALSE;
-		}
-
-		if (!LoadSequence((*Sequence), DataStream, 0))
-		{
-			delete Sequence;
-			return FALSE;
-		}
-
-		if (!Model.AddSequence(Sequence))
-		{
-			delete Sequence;
-			return FALSE;
-		}
-
-		SequenceSize = Sequence->GetSize();
+		SequenceSize = 132;
 		CurrentSize += SequenceSize;
+
+		DataStream.SetPosition(DataStream.GetPosition() + SequenceSize);
 	}
 
 	return TRUE;
 }
-
-
-//+-----------------------------------------------------------------------------
-//| Loads a model sequence
-//+-----------------------------------------------------------------------------
-BOOL MODEL_LOADER_MDX::LoadSequence(MODEL_SEQUENCE& Sequence, DATA_IN_STREAM& DataStream, INT Size)
-{
-	CHAR Buffer[MODEL_NAME_SEQUENCE_SIZE + 1];
-
-	Buffer[MODEL_NAME_SEQUENCE_SIZE] = '\0';
-
-	if (!DataStream.Read(Buffer, MODEL_NAME_SEQUENCE_SIZE)) return FALSE;
-	Sequence.Data().Name = Buffer;
-
-	Sequence.Data().Interval.x = static_cast<FLOAT>(DataStream.ReadDWord());
-	Sequence.Data().Interval.y = static_cast<FLOAT>(DataStream.ReadDWord());
-	Sequence.Data().MoveSpeed = DataStream.ReadFloat();
-	Sequence.Data().NonLooping = (DataStream.ReadDWord() == 1);
-	Sequence.Data().Rarity = DataStream.ReadFloat();
-
-	DataStream.ReadDWord();
-
-	Sequence.Data().Extent.Radius = DataStream.ReadFloat();
-	Sequence.Data().Extent.Min.x = DataStream.ReadFloat();
-	Sequence.Data().Extent.Min.y = DataStream.ReadFloat();
-	Sequence.Data().Extent.Min.z = DataStream.ReadFloat();
-	Sequence.Data().Extent.Max.x = DataStream.ReadFloat();
-	Sequence.Data().Extent.Max.y = DataStream.ReadFloat();
-	Sequence.Data().Extent.Max.z = DataStream.ReadFloat();
-
-	return TRUE;
-}
-
 
 //+-----------------------------------------------------------------------------
 //| Loads the global model sequences
@@ -198,33 +151,40 @@ BOOL MODEL_LOADER_MDX::LoadGlobalSequences(MODEL& Model, DATA_IN_STREAM& DataStr
 {
 	INT CurrentSize;
 	INT GlobalSequenceSize;
-	MODEL_GLOBAL_SEQUENCE* GlobalSequence;
 
 	CurrentSize = 0;
 	while (CurrentSize < Size)
 	{
-		GlobalSequence = new MODEL_GLOBAL_SEQUENCE();
-		if (GlobalSequence == NULL)
-		{
-			Error.SetMessage("Unable to load \"" + CurrentFileName + "\", memory allocation failed!");
-			return FALSE;
-		}
-
-		GlobalSequence->Data().Duration = DataStream.ReadDWord();
-
-		if (!Model.AddGlobalSequence(GlobalSequence))
-		{
-			delete GlobalSequence;
-			return FALSE;
-		}
-
-		GlobalSequenceSize = GlobalSequence->GetSize();
+		GlobalSequenceSize = 4;
 		CurrentSize += GlobalSequenceSize;
+
+		DataStream.SetPosition(DataStream.GetPosition() + GlobalSequenceSize);
 	}
 
 	return TRUE;
 }
 
+
+//+-----------------------------------------------------------------------------
+//| Loads the model materials
+//+-----------------------------------------------------------------------------
+BOOL MODEL_LOADER_MDX::LoadMaterials(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size)
+{
+	INT CurrentSize;
+	INT MaterialSize;
+
+	CurrentSize = 0;
+	std::string strs = "";
+	while(CurrentSize < Size)
+	{
+		MaterialSize = DataStream.ReadDWord();
+		CurrentSize += MaterialSize;
+
+		DataStream.SetPosition(DataStream.GetPosition() + MaterialSize - 4);
+	}
+
+	return TRUE;
+}
 
 //+-----------------------------------------------------------------------------
 //| Loads the model textures
@@ -255,11 +215,13 @@ BOOL MODEL_LOADER_MDX::LoadTextures(MODEL &Model, DATA_IN_STREAM &DataStream, IN
 			return FALSE;
 		}
 
+		/*
 		if (!Model.AddTexture(Texture))
 		{
 			delete Texture;
 			return FALSE;
 		}
+		*/
 
 		if (Texture->Data().FileName != "")
 		{
@@ -296,7 +258,42 @@ BOOL MODEL_LOADER_MDX::LoadTexture(MODEL_TEXTURE &Texture, DATA_IN_STREAM &DataS
 }
 
 
+//+-----------------------------------------------------------------------------
+//| Loads the model texture animations
+//+-----------------------------------------------------------------------------
+BOOL MODEL_LOADER_MDX::LoadTextureAnimations(MODEL& Model ,DATA_IN_STREAM& DataStream, INT Size)
+{
+	INT CurrentSize;
+	INT TextureAnimationSize;
 
+	CurrentSize = 0;
+	while(CurrentSize < Size)
+	{
+		TextureAnimationSize = DataStream.ReadDWord();
+		CurrentSize += TextureAnimationSize;
+
+		DataStream.SetPosition(DataStream.GetPosition() + TextureAnimationSize);
+	}
+
+	return TRUE;
+}
+
+//+-----------------------------------------------------------------------------
+//| Loads the model geosets
+//+-----------------------------------------------------------------------------
+BOOL MODEL_LOADER_MDX::LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size)
+{
+	return TRUE;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| Loads a model geoset
+//+-----------------------------------------------------------------------------
+BOOL MODEL_LOADER_MDX::LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStream, INT Size)
+{
+	return TRUE;
+}
 
 
 

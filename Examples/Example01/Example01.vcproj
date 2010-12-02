@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="8.00"
 	Name="Example01"
 	ProjectGUID="{8278251F-6C1F-4D80-8499-FA7B590FAFE6}"
 	RootNamespace="Hello_Triangle"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -68,8 +67,6 @@
 				AdditionalLibraryDirectories="..\..\Common\Lib;..\..\Lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -90,6 +87,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -147,8 +147,6 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -168,6 +166,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -268,18 +269,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ModelGlobalSequence.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelMaterialLayer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelSequence.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\ModelTexture.cpp"
 					>
 				</File>
@@ -340,10 +329,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Interpolator.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Jpeg.h"
 					>
 				</File>
@@ -360,7 +345,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\SequenceTimer.h"
+					RelativePath=".\SequenceTime.h"
 					>
 				</File>
 				<File
@@ -421,22 +406,6 @@
 				</File>
 				<File
 					RelativePath=".\ModelBase.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelGlobalSequence.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelMaterial.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelMaterialLayer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ModelSequence.h"
 					>
 				</File>
 				<File

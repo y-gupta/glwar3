@@ -25,10 +25,10 @@ MODEL_MATERIAL_LAYER::~MODEL_MATERIAL_LAYER()
 //+-----------------------------------------------------------------------------
 //| Clears the material layer
 //+-----------------------------------------------------------------------------
-MODEL_MATERIAL_LAYER::Clear()
+VOID MODEL_MATERIAL_LAYER::Clear()
 {
 	MaterialLayerData = MODEL_MATERIAL_LAYER_DATA();
-	MaterialLayerNewData = MODEL_MATERIAL_LAYER_DATA;
+	MaterialLayerNewData = MODEL_MATERIAL_LAYER_DATA();
 }
 
 
@@ -55,7 +55,7 @@ MODEL_MATERIAL_LAYER_DATA& MODEL_MATERIAL_LAYER::NewData()
 //+-----------------------------------------------------------------------------
 VOID MODEL_MATERIAL_LAYER::MarkAsUpdated()
 {
-	MaterialLayerChanged = TRUE:
+	MaterialLayerChanged = TRUE;
 }
 
 
@@ -69,7 +69,7 @@ VOID MODEL_MATERIAL_LAYER::UpdateDataIfNeccessary()
 		MaterialLayerData = MaterialLayerNewData;
 		MaterialLayerNewData = MODEL_MATERIAL_LAYER_DATA();
 
-		MaterialLayerChanged = FALSE:
+		MaterialLayerChanged = FALSE;
 	}
 }
 
@@ -81,7 +81,7 @@ INT MODEL_MATERIAL_LAYER::GetRenderOrder()
 	switch (MaterialLayerData.FilterMode)
 	{
 	case FILTER_MODE_NONE:
-		return 1
+		return 1;
 
 	case FILTER_MODE_TRANSPARENT:
 		return 2;
@@ -96,4 +96,13 @@ INT MODEL_MATERIAL_LAYER::GetRenderOrder()
 	}
 
 	return 1;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| Uses the meterial
+//+-----------------------------------------------------------------------------
+VOID MODEL_MATERIAL_LAYER::UseMaterial(const SEQUENCE_TIME &time)
+{
+
 }

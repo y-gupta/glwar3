@@ -21,7 +21,7 @@ struct MODEL_MATERIAL_LAYER_DATA
 		TextureId = INVALID_INDEX;
 		TextureAnimationId = INVALID_INDEX;
 
-		Unshaded = FALSE:
+		Unshaded = FALSE;
 		Unfogged = FALSE;
 		TwoSided = FALSE;
 		SphereEnvironmentMap = FALSE;

@@ -3,8 +3,10 @@
 //+-----------------------------------------------------------------------------
 //| Included files
 //+-----------------------------------------------------------------------------
-
-
+#include "SequenceTime.h"
+#include "Reference.h"
+#include "DataInStream.h"
+#include "Misc.h"
 //+-----------------------------------------------------------------------------
 //| Pre-declared classes
 //+-----------------------------------------------------------------------------
@@ -52,8 +54,8 @@ struct INTERPOLATOR_NODE
 
 	INTERPOLATOR_NODE(INT NewTime, CONST VECTOR4& NewVector)
 	{
-		Time = 0;
-		Vector = VECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
+		Time = NewTime;
+		Vector = NewVector;
 		InTan = VECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
 		OutTan = VECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
@@ -91,24 +93,24 @@ public:
 	VOID SetInterpolationType(INTERPOLATION_TYPE NewInterpolationType);
 	INTERPOLATION_TYPE GetInterpolationType();
 
-	VOID SetGolbalSequenceId(INT NewGlobalSequenceId);
+	VOID SetGlobalSequenceId(INT NewGlobalSequenceId);
 	INT GetGlobalSequenceId();
 
 
 	FLOAT GetScalar(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
-	D3DXVECTOR2 GetVector2(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
-	D3DXVECTOR3 GetVector3(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
-	D3DXVECTOR4 GetVector4(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
+	VECTOR2 GetVector2(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
+	VECTOR3 GetVector3(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
+	VECTOR4 GetVector4(CONST SEQUENCE_TIME& Time = SEQUENCE_TIME());
 
 	VOID SetStaticScalar(FLOAT NewScalar, CONST std::string& NewName = "");
 	VOID SetStaticScalarInt(INT NewScalar, CONST std::string& NewName = "");
-	VOID SetStaticVector2(CONST D3DXVECTOR2& NewVector2, CONST std::string& NewName = "");
-	VOID SetStaticVector3(CONST D3DXVECTOR3& NewVector3, CONST std::string& NewName = "");
-	VOID SetStaticVector4(CONST D3DXVECTOR4& NewVector4, CONST std::string& NewName = "");
+	VOID SetStaticVector2(CONST VECTOR2& NewVector2, CONST std::string& NewName = "");
+	VOID SetStaticVector3(CONST VECTOR3& NewVector3, CONST std::string& NewName = "");
+	VOID SetStaticVector4(CONST VECTOR4& NewVector4, CONST std::string& NewName = "");
 
 protected:
-	VOID GetInterpolatedValue(D3DXVECTOR4& Vector, CONST SEQUENCE_TIME& Time);
-	VOID GetQuaternionValue(D3DXVECTOR4& Vector, CONST SEQUENCE_TIME& Time);
+	VOID GetInterpolatedValue(VECTOR4& Vector, CONST SEQUENCE_TIME& Time);
+	VOID GetQuaternionValue(VECTOR4& Vector, CONST SEQUENCE_TIME& Time);
 	VOID GetSurroundingNodes(CONST SEQUENCE_TIME& Time, std::list<INTERPOLATOR_NODE>::iterator& Node1, std::list<INTERPOLATOR_NODE>::iterator& Node2);
 
 	std::list<INTERPOLATOR_NODE> NodeList;
@@ -122,5 +124,9 @@ protected:
 	VECTOR4 StaticVector;
 	VECTOR4 DefaultVector;
 
-	
+public:
+	REFERENCE<INTERPOLATOR*, MODEL_GLOBAL_SEQUENCE*> GlobalSequenceNode;
+	REFERENCE<INTERPOLATOR*, INTERPOLATOR*> InterpolatorNode;
+
+	static REFERENCE_OBJECT<INTERPOLATOR*, INTERPOLATOR*> InterpolatorNodes;
 };
