@@ -26,3 +26,13 @@ GRAPHICS::~GRAPHICS()
 {
 
 }
+
+
+//+-----------------------------------------------------------------------------
+//| Sets a new world matrix
+//+-----------------------------------------------------------------------------
+VOID GRAPHICS::SetWorldMatrix(CONST MATRIX4& NewWorldMatrix)
+{
+	WorldMatrix = NewWorldMatrix;
+	//Direct3DDevice->SetTransform(D3DTS_WORLD, &WorldMatrix);
+}

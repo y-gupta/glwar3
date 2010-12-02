@@ -41,6 +41,25 @@ MODEL_GEOSET_DATA& MODEL_GEOSET::Data()
 
 
 //+-----------------------------------------------------------------------------
+//| Returns the render order
+//+-----------------------------------------------------------------------------
+INT MODEL_GEOSET::GetRenderOrder()
+{
+	return 1;
+}
+
+//+-----------------------------------------------------------------------------
+//| Renders the geoset
+//+-----------------------------------------------------------------------------
+VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
+{
+	MATRIX4 Matrix;
+
+	Matrix.Identity();
+	Graphics.SetWorldMatrix(Matrix);
+}
+
+//+-----------------------------------------------------------------------------
 //| Adds a new vertex
 //+-----------------------------------------------------------------------------
 BOOL MODEL_GEOSET::AddVertex(MODEL_GEOSET_VERTEX* Vertex)
