@@ -34,10 +34,13 @@ protected:
 	static BOOL LoadVersion(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadModel(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadSequences(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
-	static BOOL LoadSequence(MODEL_SEQUENCE& Sequence, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadGlobalSequences(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadTextures(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
 	static BOOL LoadTexture(MODEL_TEXTURE& Texture, DATA_IN_STREAM& DataStream, INT Size);
+	static BOOL LoadMaterials(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
+	static BOOL LoadTextureAnimations(MODEL& Model ,DATA_IN_STREAM& DataStream, INT Size);
+	static BOOL LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT Size);
+	static BOOL LoadGeoset(MODEL_GEOSET &Geoset, DATA_IN_STREAM& DataStream, INT Size);
 
 	std::map<DWORD, MDX_LOADER> MdxLoaderMap;
 };

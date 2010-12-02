@@ -1,37 +1,20 @@
 #include "TextureManager.h"
 
 GLuint programObject;
-TEXTURE *Texture;
-
-struct Vertex
-{
-	float p[3];
-	float t[2];
-};
-
-Vertex vertices[] = {
-	{ {-0.5f, 0.5f, 0.0f},	{1.0f, 0.0f}},
-	{ {-0.5f, -0.5f, 0.0f},	{1.0f, 1.0f}},
-	{ {0.5f, -0.5f, 0.0f},	{0.0f, 1.0f}},
-	{ {0.5f, 0.5f, 0.0f},	{0.0f, 0.0f}}
-};
-
-GLshort indices[] = { 0, 1, 2, 0, 2, 3};
 
 int Init ( ESContext *esContext )
 {
 	ResourceLoader.RegisterAllLoaders();
 
-	if(!TextureManager.Load("Abomination.blp")) return 0;
-	Texture = TextureManager.GetTexture("Abomination.blp");
+	if(!TextureManager.Load("Textures/AshenNatural.blp")) return 0;
 
 	BUFFER Buffer;
-	if(!FileLoader.LoadFromFile("Abomination.mdx", Buffer))
+	if(!FileLoader.LoadFromFile("AshenBush0.mdx", Buffer))
 	{
-		Error.SetMessage("Unable to load \"Abomination.mdx\", file does not exist!");
+		Error.SetMessage("Unable to load \"AshenBush0.mdx\", file does not exist!");
 		return 0;
 	}
-	if(!ResourceLoader.LoadModel(Model, "Abomination.mdx", Buffer)) return 0;
+	if(!ResourceLoader.LoadModel(Model, "AshenBush0.mdx", Buffer)) return 0;
 
 	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
 	glUseProgram(programObject);
@@ -48,25 +31,10 @@ void Draw ( ESContext *esContext )
 	glFrontFace(GL_CCW);
 	glEnable(GL_BACK);
 	glCullFace(GL_BACK);
-	glEnable(GL_TEXTURE_2D);
 
-	GLuint positionSlot = glGetAttribLocation(programObject, "Position");
-	glEnableVertexAttribArray(positionSlot);
-	glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices->p[0]);
+	INT TimeDifference;
+	Model.Render(TimeDifference);
 
-	GLuint texcoordSlot = glGetAttribLocation(programObject, "TexCoord");
-	glEnableVertexAttribArray(texcoordSlot);
-	glVertexAttribPointer(texcoordSlot, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), &vertices->t[0]);
-
-	GLuint sampler = glGetUniformLocation(programObject, "Sampler");
-	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(sampler, 0);
-
-	glBindTexture(GL_TEXTURE_2D, Texture->GetTextureId());
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
-
-	glDisable(GL_TEXTURE_2D);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
 }

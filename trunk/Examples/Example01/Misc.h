@@ -11,5 +11,6 @@
 #include "Jpeg.h"
 #include "Extent.h"
 #include "SimpleContainer.h"
-#include "SequenceTimer.h"
+#include "SequenceTime.h"
 #include "DataInStream.h"
+#include "Interpolator.h"
