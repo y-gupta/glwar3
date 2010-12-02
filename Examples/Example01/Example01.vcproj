@@ -269,6 +269,22 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ModelGeoset.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetFace.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetVertex.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ModelTexture.cpp"
 					>
 				</File>
@@ -330,6 +346,10 @@
 				</File>
 				<File
 					RelativePath=".\Jpeg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Matrix.h"
 					>
 				</File>
 				<File
@@ -406,6 +426,22 @@
 				</File>
 				<File
 					RelativePath=".\ModelBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeoset.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetFace.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetGroup.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ModelGeosetVertex.h"
 					>
 				</File>
 				<File

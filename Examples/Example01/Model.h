@@ -90,3 +90,4 @@ extern MODEL Model;
 //+-----------------------------------------------------------------------------
 #include "Graphics.h"
 #include "ModelTexture.h"
+#include "ModelGeoset.h"
