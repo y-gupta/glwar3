@@ -1,7 +1,5 @@
 #include "TextureManager.h"
 
-GLuint programObject;
-
 int Init ( ESContext *esContext )
 {
 	ResourceLoader.RegisterAllLoaders();
@@ -16,8 +14,7 @@ int Init ( ESContext *esContext )
 	}
 	if(!ResourceLoader.LoadModel(Model, "AshenBush0.mdx", Buffer)) return 0;
 
-	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
-	glUseProgram(programObject);
+
 
 	glClearColor ( 0.5f, 0.5f, 0.5f, 1.0f );
 
@@ -32,9 +29,8 @@ void Draw ( ESContext *esContext )
 	glEnable(GL_BACK);
 	glCullFace(GL_BACK);
 
-	INT TimeDifference;
+	INT TimeDifference = 0;
 	Model.Render(TimeDifference);
-
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
 }

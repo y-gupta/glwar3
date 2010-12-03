@@ -1,10 +1,6 @@
-attribute vec4 Position;
-attribute vec2 TexCoord;
-
-varying vec2 DestTexCoord;
+attribute vec4 a_position;
 
 void main(void)
 {
-	DestTexCoord = TexCoord;
-	gl_Position = Position;
+	gl_Position =  a_position;
 }
