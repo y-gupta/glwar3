@@ -4,16 +4,14 @@
 #include "ModelGeoset.h"
 
 
-GLuint programObject;
-GLuint positionSlot;
 
 //+-----------------------------------------------------------------------------
 //| Constructor
 //+-----------------------------------------------------------------------------
 MODEL_GEOSET::MODEL_GEOSET()
 {
-	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
-	positionSlot = glGetAttribLocation(programObject, "a_position");
+	vertices = NULL;
+	indices = NULL;
 }
 
 
@@ -52,55 +50,116 @@ INT MODEL_GEOSET::GetRenderOrder()
 	return 1;
 }
 
+
+//+-----------------------------------------------------------------------------
+//| Builds a mesh from the vertex and face information
+//+-----------------------------------------------------------------------------
+BOOL MODEL_GEOSET::BuildMesh()
+{
+	INT NrOfVertices;
+	INT NrOfIndices;
+	INT Pos;
+
+	/*
+	static FLOAT ve[] = {
+		-0.5f, -0.866f, 0.0f,	
+		0.5f, -0.866f, 0.0f,	
+		0, 1, 0.0f, 0.0f,
+	};
+
+	static INT in[] = {0, 1, 2};
+
+	if (MeshBuildt) return TRUE;
+
+	SAFE_ARRAY_DELETE(vertices);
+	SAFE_ARRAY_DELETE(indices);
+
+	vertices =  new FLOAT[9];
+	indices = new INT[3];
+
+	for (int i=0; i<9; i++)
+	{
+		vertices[i] = ve[i];
+	}
+
+	for (int i=0; i<3; i++)
+	{
+		indices[i] = in[i];
+	}
+
+	MeshBuildt = true;
+
+	return TRUE;
+	*/
+
+	if (MeshBuildt) return TRUE;
+
+	NrOfVertices = GeosetData.VertexContainer.GetSize();
+	if(NrOfVertices <= 0) return FALSE;
+
+	NrOfIndices = GeosetData.FaceContainer.GetSize() * 3;
+	if(NrOfIndices <= 0) return FALSE;
+
+	//SAFE_ARRAY_DELETE(vertices);
+	//SAFE_ARRAY_DELETE(indices);
+
+	//vertices =  new FLOAT[NrOfVertices];
+	//indices = new INT[NrOfIndices];
+
+	static FLOAT ve[2048];
+	static INT in[2048];
+	Pos = 0;
+	for (INT i = 0; i < GeosetData.VertexContainer.GetTotalSize(); i++)
+	{
+		if (GeosetData.VertexContainer.ValidIndex(i))
+		{
+			ve[Pos] = GeosetData.VertexContainer[i]->Position.x/255.f;
+			Pos++;
+
+			ve[Pos] = GeosetData.VertexContainer[i]->Position.y/255.f;
+			Pos++;
+
+			ve[Pos] = GeosetData.VertexContainer[i]->Position.z/255.f;
+			Pos++;
+		}
+	}
+
+	Pos = 0;
+	for(INT i = 0; i < GeosetData.FaceContainer.GetTotalSize(); i++)
+	{
+		if(GeosetData.FaceContainer.ValidIndex(i))
+		{
+			in[Pos] = GeosetData.FaceContainer[i]->Index1;
+			Pos++;
+
+			in[Pos] = GeosetData.FaceContainer[i]->Index2;
+			Pos++;
+
+			in[Pos] = GeosetData.FaceContainer[i]->Index3;
+			Pos++;
+		}
+	}
+
+	vertices = ve;
+	indices = in;
+	MeshBuildt = TRUE;
+
+	return TRUE;
+}
+
 //+-----------------------------------------------------------------------------
 //| Renders the geoset
 //+-----------------------------------------------------------------------------
 VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 {
-	INT pos;
+	BuildMesh();
 
-	FLOAT vertices[32 * 3];
-	SHORT indices[60];
+	glUseProgram(Graphics.Program());
 
-	pos = 0;
-	for (INT i = 0; i < GeosetData.VertexContainer.GetTotalSize(); i++)
-	{
-		if (GeosetData.VertexContainer.ValidIndex(i))
-		{
-			vertices[pos] = GeosetData.VertexContainer[i]->Position.x/255.f;
-			pos++;
-
-			vertices[pos] = GeosetData.VertexContainer[i]->Position.y/255.f;
-			pos++;
-
-			vertices[pos] = GeosetData.VertexContainer[i]->Position.z/255.f;
-			pos++;
-		}
-	}
-
-	pos = 0;
-	for(INT i = 0; i < GeosetData.FaceContainer.GetTotalSize(); i++)
-	{
-		if(GeosetData.FaceContainer.ValidIndex(i))
-		{
-			indices[pos] = GeosetData.FaceContainer[i]->Index1;
-			pos++;
-
-			indices[pos] = GeosetData.FaceContainer[i]->Index2;
-			pos++;
-
-			indices[pos] = GeosetData.FaceContainer[i]->Index3;
-			pos++;
-		}
-	}
-
-	
-	glUseProgram(programObject);
-
-	glEnableVertexAttribArray(positionSlot);
-	glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(FLOAT) * 3, vertices);
-	glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_SHORT, indices);
-	glDisableVertexAttribArray(positionSlot);
+	glEnableVertexAttribArray(Graphics.Position());
+	glVertexAttribPointer(Graphics.Position(), 3, GL_FLOAT, GL_FALSE, sizeof(FLOAT) * 3, vertices);
+	glDrawElements(GL_TRIANGLES, GeosetData.FaceContainer.GetTotalSize() * 3, GL_UNSIGNED_INT, indices);
+	glDisableVertexAttribArray(Graphics.Position());
 }
 
 //+-----------------------------------------------------------------------------

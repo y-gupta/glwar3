@@ -1,20 +1,20 @@
 #include "TextureManager.h"
 
+
+std::string MdxFileName = "AshenBush0.mdx";
+
 int Init ( ESContext *esContext )
 {
+	Graphics.SetShader();
 	ResourceLoader.RegisterAllLoaders();
 
-	if(!TextureManager.Load("Textures/AshenNatural.blp")) return 0;
-
 	BUFFER Buffer;
-	if(!FileLoader.LoadFromFile("AshenBush0.mdx", Buffer))
+	if(!FileLoader.LoadFromFile(MdxFileName, Buffer))
 	{
 		Error.SetMessage("Unable to load \"AshenBush0.mdx\", file does not exist!");
 		return 0;
 	}
-	if(!ResourceLoader.LoadModel(Model, "AshenBush0.mdx", Buffer)) return 0;
-
-
+	if(!ResourceLoader.LoadModel(Model, MdxFileName, Buffer)) return 0;
 
 	glClearColor ( 0.5f, 0.5f, 0.5f, 1.0f );
 

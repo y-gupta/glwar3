@@ -385,6 +385,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Mesh.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Texture.h"
 					>
 				</File>
