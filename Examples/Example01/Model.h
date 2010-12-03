@@ -48,6 +48,7 @@ struct MODEL_DATA
 
 	MODEL_INFO_DATA Info;
 
+	SIMPLE_CONTAINER<MODEL_TEXTURE*> TextureContainer;
 	SIMPLE_CONTAINER<MODEL_GEOSET*> GeosetContainer;
 };
 
@@ -68,6 +69,7 @@ public:
 
 	VOID Render(INT TimeDifference);
 
+	BOOL AddTexture(MODEL_TEXTURE* Texture);
 	BOOL AddGeoset(MODEL_GEOSET* Geoset, BOOL Imported = FALSE);
 
 protected:

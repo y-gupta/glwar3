@@ -17,11 +17,18 @@ public:
 
 	VOID SetWorldMatrix(CONST MATRIX4& NewWorldMatrix);
 
+	BOOL SetShader();
+	GLuint Program() CONST;
+	GLuint Position() CONST;
+
 protected:
 	MATRIX4 ProjectionMatirx;
 	MATRIX4 ViewMatrix;
 	MATRIX4 WorldMatrix;
 	MATRIX4 WorldViewProjectionMatrix;
+
+	GLuint ProgramObject;
+	GLuint PositionSlot;
 
 	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
 

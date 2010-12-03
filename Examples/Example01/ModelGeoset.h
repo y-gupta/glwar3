@@ -59,6 +59,8 @@ public:
 
 	VOID Render(CONST SEQUENCE_TIME& time, BOOL Animated);
 
+	BOOL BuildMesh();
+
 	BOOL AddVertex(MODEL_GEOSET_VERTEX* Vertex);
 	BOOL AddFace(MODEL_GEOSET_FACE* Face);
 	BOOL AddGroup(MODEL_GEOSET_GROUP* Group);
@@ -68,6 +70,8 @@ protected:
 	MODEL_GEOSET_DATA GeosetData;
 
 	BOOL MeshBuildt;
+	FLOAT* vertices;
+	INT* indices;
 
 public:
 
