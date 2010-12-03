@@ -107,7 +107,9 @@ BOOL MODEL_GEOSET::BuildMesh()
 	//indices = new INT[NrOfIndices];
 
 	static FLOAT ve[2048];
+	static FLOAT te[2048];
 	static INT in[2048];
+
 	Pos = 0;
 	for (INT i = 0; i < GeosetData.VertexContainer.GetTotalSize(); i++)
 	{
@@ -156,10 +158,22 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 
 	glUseProgram(Graphics.Program());
 
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
 	glEnableVertexAttribArray(Graphics.Position());
+	glEnableVertexAttribArray(Graphics.TexturePosition());
+	
+	glUniform1i(Graphics.Texture(), 0);
+
 	glVertexAttribPointer(Graphics.Position(), 3, GL_FLOAT, GL_FALSE, sizeof(FLOAT) * 3, vertices);
+	glVertexAttribPointer(Graphics.TexturePosition(), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(FLOAT), TexturePositions);
 	glDrawElements(GL_TRIANGLES, GeosetData.FaceContainer.GetTotalSize() * 3, GL_UNSIGNED_INT, indices);
-	glDisableVertexAttribArray(Graphics.Position());
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisableVertexAttribArray(Graphics.TexturePosition());
+	glDisableVertexAttribArray(Graphics.Texture());
+	
 }
 
 //+-----------------------------------------------------------------------------

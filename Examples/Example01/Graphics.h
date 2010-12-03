@@ -20,6 +20,8 @@ public:
 	BOOL SetShader();
 	GLuint Program() CONST;
 	GLuint Position() CONST;
+	GLuint TexturePosition() CONST;
+	GLuint Texture() CONST;
 
 protected:
 	MATRIX4 ProjectionMatirx;
@@ -29,6 +31,8 @@ protected:
 
 	GLuint ProgramObject;
 	GLuint PositionSlot;
+	GLuint TexturePositionSlot;
+	GLuint TextureSlot;
 
 	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
 
