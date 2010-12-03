@@ -44,7 +44,9 @@ VOID GRAPHICS::SetWorldMatrix(CONST MATRIX4& NewWorldMatrix)
 BOOL GRAPHICS::SetShader()
 {
 	ProgramObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
-	PositionSlot = glGetAttribLocation(ProgramObject, "a_position");
+	PositionSlot = glGetAttribLocation(ProgramObject, "Position");
+	TexturePositionSlot = glGetAttribLocation(ProgramObject, "TexturePosition");
+	TextureSlot = glGetUniformLocation(ProgramObject, "Texture");
 
 	return TRUE;
 }
@@ -64,4 +66,22 @@ GLuint GRAPHICS::Program() CONST
 GLuint GRAPHICS::Position() CONST
 {
 	return PositionSlot;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| 
+//+-----------------------------------------------------------------------------
+GLuint GRAPHICS::TexturePosition() CONST
+{
+	return TexturePositionSlot;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| 
+//+-----------------------------------------------------------------------------
+GLuint GRAPHICS::Texture() CONST
+{
+	return TextureSlot;
 }

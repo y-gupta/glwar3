@@ -71,6 +71,7 @@ protected:
 
 	BOOL MeshBuildt;
 	FLOAT* vertices;
+	FLOAT* TexturePositions;
 	INT* indices;
 
 public:

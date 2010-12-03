@@ -1,6 +1,10 @@
-attribute vec4 a_position;
+attribute vec4 Position;
+attribute vec2 TexturePosition;
+
+varying vec2 DestTexturePosition;
 
 void main(void)
 {
-	gl_Position =  a_position;
+	DestTexturePosition = TexturePosition;
+	gl_Position =  Position;
 }
