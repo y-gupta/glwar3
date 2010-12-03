@@ -50,7 +50,6 @@ VOID MODEL::Clear()
 //+-----------------------------------------------------------------------------
 VOID MODEL::Render(INT TimeDifference)
 {
-
 	std::list<INT> RenderOrderList1;
 	std::list<INT> RenderOrderList2;
 	std::list<INT> RenderOrderList3;
@@ -90,9 +89,53 @@ VOID MODEL::Render(INT TimeDifference)
 		}
 	}
 
+	/*
+	GLuint programObject;
+	GLuint positionSlot;
+
+
+	FLOAT vertices[] = {
+		0.0f, 0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+	};
+
+	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
+	glUseProgram(programObject);
+
+	positionSlot = glGetAttribLocation(programObject, "a_position");
+
+	const GLshort indices1[] = {0, 1, 2};
+	glEnableVertexAttribArray(positionSlot);
+	glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(FLOAT) * 3, vertices);
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, indices1);
+	glDisableVertexAttribArray(positionSlot);
+
+	return;
+	*/
+
 	j = RenderOrderList1.begin();
 	while (j != RenderOrderList1.end())
 	{
 		ModelData.GeosetContainer[*j]->Render(SEQUENCE_TIME(), FALSE);
+		j++;
 	}
+}
+
+
+//+-----------------------------------------------------------------------------
+//| Adds a geoset
+//+-----------------------------------------------------------------------------
+BOOL MODEL::AddGeoset(MODEL_GEOSET *Geoset, BOOL Imported)
+{
+	std::stringstream Stream;
+
+	if(!ModelData.GeosetContainer.Add(Geoset))
+	{
+		Error.SetMessage("Unable to add a new geoset!");
+		return FALSE;
+	}
+
+	return TRUE;
+
 }

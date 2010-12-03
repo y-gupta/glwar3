@@ -71,6 +71,8 @@ BOOL MODEL_LOADER_MDX::Load(MODEL& Model, CONST std::string& FileName, BUFFER& B
 		Size = static_cast<INT>(DataStream.ReadDWord());
 
 		std::string StrGroup =  GroupToString(Group);
+		if (StrGroup == "BONE") return TRUE;
+
 		i = MdxLoaderMap.find(Group);
 		if (i == MdxLoaderMap.end())
 		{
@@ -306,13 +308,11 @@ BOOL MODEL_LOADER_MDX::LoadGeosets(MODEL& Model, DATA_IN_STREAM& DataStream, INT
 			return FALSE;
 		}
 
-		/*
 		if(!Model.AddGeoset(Geoset))
 		{
 			delete Geoset;
 			return FALSE;
 		}
-		*/
 	}
 }
 

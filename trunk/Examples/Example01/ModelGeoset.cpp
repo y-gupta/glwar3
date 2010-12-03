@@ -4,12 +4,16 @@
 #include "ModelGeoset.h"
 
 
+GLuint programObject;
+GLuint positionSlot;
+
 //+-----------------------------------------------------------------------------
 //| Constructor
 //+-----------------------------------------------------------------------------
 MODEL_GEOSET::MODEL_GEOSET()
 {
-
+	programObject = esLoadProgramFromFile("Simple.vert", "Simple.frag");
+	positionSlot = glGetAttribLocation(programObject, "a_position");
 }
 
 
@@ -53,10 +57,50 @@ INT MODEL_GEOSET::GetRenderOrder()
 //+-----------------------------------------------------------------------------
 VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 {
-	MATRIX4 Matrix;
+	INT pos;
 
-	Matrix.Identity();
-	Graphics.SetWorldMatrix(Matrix);
+	FLOAT vertices[32 * 3];
+	SHORT indices[60];
+
+	pos = 0;
+	for (INT i = 0; i < GeosetData.VertexContainer.GetTotalSize(); i++)
+	{
+		if (GeosetData.VertexContainer.ValidIndex(i))
+		{
+			vertices[pos] = GeosetData.VertexContainer[i]->Position.x/255.f;
+			pos++;
+
+			vertices[pos] = GeosetData.VertexContainer[i]->Position.y/255.f;
+			pos++;
+
+			vertices[pos] = GeosetData.VertexContainer[i]->Position.z/255.f;
+			pos++;
+		}
+	}
+
+	pos = 0;
+	for(INT i = 0; i < GeosetData.FaceContainer.GetTotalSize(); i++)
+	{
+		if(GeosetData.FaceContainer.ValidIndex(i))
+		{
+			indices[pos] = GeosetData.FaceContainer[i]->Index1;
+			pos++;
+
+			indices[pos] = GeosetData.FaceContainer[i]->Index2;
+			pos++;
+
+			indices[pos] = GeosetData.FaceContainer[i]->Index3;
+			pos++;
+		}
+	}
+
+	
+	glUseProgram(programObject);
+
+	glEnableVertexAttribArray(positionSlot);
+	glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(FLOAT) * 3, vertices);
+	glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_SHORT, indices);
+	glDisableVertexAttribArray(positionSlot);
 }
 
 //+-----------------------------------------------------------------------------

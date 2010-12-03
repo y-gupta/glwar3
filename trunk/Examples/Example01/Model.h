@@ -68,7 +68,7 @@ public:
 
 	VOID Render(INT TimeDifference);
 
-	VOID AddGeoset(MODEL_GEOSET* Geoset, BOOL Imported = FALSE);
+	BOOL AddGeoset(MODEL_GEOSET* Geoset, BOOL Imported = FALSE);
 
 protected:
 
