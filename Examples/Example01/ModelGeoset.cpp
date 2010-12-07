@@ -127,6 +127,19 @@ BOOL MODEL_GEOSET::BuildMesh()
 	}
 
 	Pos = 0;
+	for (INT i = 0; i < GeosetData.VertexContainer.GetTotalSize(); i++)
+	{
+		if (GeosetData.VertexContainer.ValidIndex(i))
+		{
+			te[Pos] = GeosetData.VertexContainer[i]->TexturePosition.x;
+			Pos++;
+
+			te[Pos] = GeosetData.VertexContainer[i]->TexturePosition.y;
+			Pos++;
+		}
+	}
+
+	Pos = 0;
 	for(INT i = 0; i < GeosetData.FaceContainer.GetTotalSize(); i++)
 	{
 		if(GeosetData.FaceContainer.ValidIndex(i))
@@ -143,6 +156,7 @@ BOOL MODEL_GEOSET::BuildMesh()
 	}
 
 	vertices = ve;
+	TexturePositions = te;
 	indices = in;
 	MeshBuildt = TRUE;
 
@@ -160,6 +174,8 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE0);
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glActiveTexture(GL_TEXTURE0);
 	glEnableVertexAttribArray(Graphics.Position());
 	glEnableVertexAttribArray(Graphics.TexturePosition());
