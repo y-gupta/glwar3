@@ -184,8 +184,10 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 	esMatrixLoadIdentity(&modelviewMatrix);
 	esScale(&modelviewMatrix, 3.0f, 3.0f, 3.0f);
 	esTranslate(&modelviewMatrix, 0.0f, 0.0f, 0.0f);
-	esRotate(&modelviewMatrix, 60.0f, 1.0f, 1.0f, 0.0f);
-	
+
+	static float angle = 0.0f;
+	esRotate(&modelviewMatrix,angle, 1.0f, 1.0f, 0.0f);
+	angle += 0.01f;
 	esMatrixLoadIdentity(&mvpMatrix);
 	esMatrixMultiply(&mvpMatrix, &modelviewMatrix, &perspectiveMatrix);
 	glUniformMatrix4fv(Graphics.WVPMatrix(), 1, GL_FALSE, (GLfloat*) mvpMatrix.m);
@@ -193,6 +195,7 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE0);
 	glEnable(GL_BLEND);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glActiveTexture(GL_TEXTURE0);
 	glEnableVertexAttribArray(Graphics.Position());
