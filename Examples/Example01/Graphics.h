@@ -22,6 +22,7 @@ public:
 	GLuint Position() CONST;
 	GLuint TexturePosition() CONST;
 	GLuint Texture() CONST;
+	GLuint WVPMatrix() CONST;
 
 protected:
 	MATRIX4 ProjectionMatirx;
@@ -33,6 +34,7 @@ protected:
 	GLuint PositionSlot;
 	GLuint TexturePositionSlot;
 	GLuint TextureSlot;
+	GLuint WVPSlot;
 
 	REFERENCE_OBJECT<TEXTURE*, GRAPHICS*> TextureReferenceObject;
 

@@ -47,7 +47,7 @@ BOOL GRAPHICS::SetShader()
 	PositionSlot = glGetAttribLocation(ProgramObject, "Position");
 	TexturePositionSlot = glGetAttribLocation(ProgramObject, "TexturePosition");
 	TextureSlot = glGetUniformLocation(ProgramObject, "Texture");
-
+	WVPSlot = glGetUniformLocation(ProgramObject, "WVPMatrix");
 	return TRUE;
 }
 
@@ -84,4 +84,13 @@ GLuint GRAPHICS::TexturePosition() CONST
 GLuint GRAPHICS::Texture() CONST
 {
 	return TextureSlot;
+}
+
+
+//+-----------------------------------------------------------------------------
+//| 
+//+-----------------------------------------------------------------------------
+GLuint GRAPHICS::WVPMatrix() CONST
+{
+	return WVPSlot;
 }
