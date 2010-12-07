@@ -107,9 +107,10 @@ BOOL TEXTURE_LOADER_BLP::LoadCompressed(TEXTURE& Texture, BLP_HEADER& Header, BU
 	glBindTexture(GL_TEXTURE_2D, TextureId);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Header.Width, Header.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, TempBuffer.GetData());
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	
+	glGenerateMipmap(GL_TEXTURE_2D);
 	Texture.TextureId = TextureId;
 	return TRUE;
 }
