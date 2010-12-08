@@ -186,8 +186,9 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 	esTranslate(&modelviewMatrix, 0.0f, 0.0f, 0.0f);
 
 	static float angle = 0.0f;
-	esRotate(&modelviewMatrix,angle, 1.0f, 1.0f, 0.0f);
+	esRotate(&modelviewMatrix,angle, 1.0f, 0.0f, 0.0f);
 	angle += 0.2f;
+
 	esMatrixLoadIdentity(&mvpMatrix);
 	esMatrixMultiply(&mvpMatrix, &modelviewMatrix, &perspectiveMatrix);
 	glUniformMatrix4fv(Graphics.WVPMatrix(), 1, GL_FALSE, (GLfloat*) mvpMatrix.m);
