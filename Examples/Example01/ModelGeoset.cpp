@@ -182,21 +182,19 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 	esPerspective(&perspectiveMatrix, 60.0f, aspect, 1.0f, 20.0f);
 
 	esMatrixLoadIdentity(&modelviewMatrix);
-	esScale(&modelviewMatrix, 3.0f, 3.0f, 3.0f);
+	esScale(&modelviewMatrix, 1.0f, 1.0f, 1.0f);
 	esTranslate(&modelviewMatrix, 0.0f, 0.0f, 0.0f);
 
 	static float angle = 0.0f;
 	esRotate(&modelviewMatrix,angle, 1.0f, 1.0f, 0.0f);
-	angle += 0.01f;
+	angle += 0.2f;
 	esMatrixLoadIdentity(&mvpMatrix);
 	esMatrixMultiply(&mvpMatrix, &modelviewMatrix, &perspectiveMatrix);
 	glUniformMatrix4fv(Graphics.WVPMatrix(), 1, GL_FALSE, (GLfloat*) mvpMatrix.m);
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE0);
-	glEnable(GL_BLEND);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glActiveTexture(GL_TEXTURE0);
 	glEnableVertexAttribArray(Graphics.Position());
 	glEnableVertexAttribArray(Graphics.TexturePosition());
@@ -208,7 +206,6 @@ VOID MODEL_GEOSET::Render(CONST SEQUENCE_TIME& time, BOOL Animated)
 	glDrawElements(GL_TRIANGLES, GeosetData.FaceContainer.GetTotalSize() * 3, GL_UNSIGNED_INT, indices);
 	
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE0);
 	glDisableVertexAttribArray(Graphics.TexturePosition());
 	glDisableVertexAttribArray(Graphics.Texture());
